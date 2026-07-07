@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.09">
+    <CstmrCdtTrfInitn>
+
+        <GrpHdr>
+            <MsgId>PAIN001-20240115-001</MsgId>
+            <CreDtTm>2024-01-15T10:25:00</CreDtTm>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>1000.00</CtrlSum>
+
+            <InitgPty>
+                <Nm>ACME Corporation</Nm>
+            </InitgPty>
+        </GrpHdr>
+
+        <PmtInf>
+            <PmtInfId>PMTINF-20240115-001</PmtInfId>
+
+            <PmtMtd>TRF</PmtMtd>
+
+            <NbOfTxs>1</NbOfTxs>
+
+            <CtrlSum>1000.00</CtrlSum>
+
+            <ReqdExctnDt>
+                <Dt>2024-01-15</Dt>
+            </ReqdExctnDt>
+
+            <Dbtr>
+                <Nm>ACME Corporation</Nm>
+                <PstlAdr>
+                    <Ctry>US</Ctry>
+                </PstlAdr>
+            </Dbtr>
+
+            <DbtrAcct>
+                <Id>
+                    <IBAN>US12345678901234567890</IBAN>
+                </Id>
+            </DbtrAcct>
+
+            <DbtrAgt>
+                <FinInstnId>
+                    <BICFI>CHASUS33XXX</BICFI>
+                </FinInstnId>
+            </DbtrAgt>
+
+            <CdtTrfTxInf>
+
+                <PmtId>
+                    <InstrId>INSTR-20240115-001</InstrId>
+                    <EndToEndId>E2E-REF-001</EndToEndId>
+                </PmtId>
+
+                <Amt>
+                    <InstdAmt Ccy="USD">1000.00</InstdAmt>
+                </Amt>
+
+                <CdtrAgt>
+                    <FinInstnId>
+                        <BICFI>BARCGB22XXX</BICFI>
+                    </FinInstnId>
+                </CdtrAgt>
+
+                <Cdtr>
+                    <Nm>Global Suppliers Ltd</Nm>
+                    <PstlAdr>
+                        <Ctry>GB</Ctry>
+                    </PstlAdr>
+                </Cdtr>
+
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>GB29NWBK60161331926819</IBAN>
+                    </Id>
+                </CdtrAcct>
+
+                <RmtInf>
+                    <Ustrd>Invoice INV-2024-001 payment</Ustrd>
+                </RmtInf>
+
+            </CdtTrfTxInf>
+
+        </PmtInf>
+
+    </CstmrCdtTrfInitn>
+</Document>

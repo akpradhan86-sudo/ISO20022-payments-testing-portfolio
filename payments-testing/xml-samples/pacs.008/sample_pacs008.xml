@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08">
+  <FIToFICstmrCdtTrf>
+    <GrpHdr>
+      <MsgId>MSG-20240101-001</MsgId>
+      <CreDtTm>2024-01-15T10:30:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <TtlIntrBkSttlmAmt Ccy="USD">1000.00</TtlIntrBkSttlmAmt>
+      <SttlmInf>
+        <SttlmMtd>CLRG</SttlmMtd>
+      </SttlmInf>
+    </GrpHdr>
+    <CdtTrfTxInf>
+      <PmtId>
+        <EndToEndId>E2E-REF-001</EndToEndId>
+        <TxId>TXN-20240115-001</TxId>
+        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>
+      </PmtId>
+      <IntrBkSttlmAmt Ccy="USD">1000.00</IntrBkSttlmAmt>
+      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>
+      <Dbtr>
+        <Nm>ACME Corporation</Nm>
+        <PstlAdr>
+          <Ctry>US</Ctry>
+        </PstlAdr>
+      </Dbtr>
+      <DbtrAcct>
+        <Id><IBAN>US12345678901234567890</IBAN></Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>
+      </DbtrAgt>
+      <CdtrAgt>
+        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <Nm>Global Suppliers Ltd</Nm>
+        <PstlAdr>
+          <Ctry>GB</Ctry>
+        </PstlAdr>
+      </Cdtr>
+      <CdtrAcct>
+        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>
+      </CdtrAcct>
+      <RmtInf>
+        <Ustrd>Invoice INV-2024-001 payment</Ustrd>
+      </RmtInf>
+    </CdtTrfTxInf>
+  </FIToFICstmrCdtTrf>
+</Document>

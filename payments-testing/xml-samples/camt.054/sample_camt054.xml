@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.054.001.08">
+    <BkToCstmrDbtCdtNtfctn>
+
+        <GrpHdr>
+            <MsgId>CAMT054-20240115-001</MsgId>
+            <CreDtTm>2024-01-15T10:35:00</CreDtTm>
+        </GrpHdr>
+
+        <Ntfctn>
+
+            <Id>NOTIFICATION-20240115-001</Id>
+
+            <CreDtTm>2024-01-15T10:35:00</CreDtTm>
+
+            <Acct>
+                <Id>
+                    <IBAN>GB29NWBK60161331926819</IBAN>
+                </Id>
+
+                <Ccy>USD</Ccy>
+
+                <Nm>Global Suppliers Ltd</Nm>
+            </Acct>
+
+            <Ntry>
+
+                <Amt Ccy="USD">1000.00</Amt>
+
+                <CdtDbtInd>CRDT</CdtDbtInd>
+
+                <Sts>
+                    <Cd>BOOK</Cd>
+                </Sts>
+
+                <BookgDt>
+                    <Dt>2024-01-15</Dt>
+                </BookgDt>
+
+                <ValDt>
+                    <Dt>2024-01-15</Dt>
+                </ValDt>
+
+                <AcctSvcrRef>TXN-20240115-001</AcctSvcrRef>
+
+                <NtryDtls>
+
+                    <TxDtls>
+
+                        <Refs>
+                            <MsgId>MSG-20240101-001</MsgId>
+                            <InstrId>INSTR-20240115-001</InstrId>
+                            <EndToEndId>E2E-REF-001</EndToEndId>
+                            <TxId>TXN-20240115-001</TxId>
+                            <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>
+                        </Refs>
+
+                        <Amt Ccy="USD">1000.00</Amt>
+
+                        <CdtDbtInd>CRDT</CdtDbtInd>
+
+                        <RltdPties>
+
+                            <Dbtr>
+                                <Pty>
+                                    <Nm>ACME Corporation</Nm>
+                                    <PstlAdr>
+                                        <Ctry>US</Ctry>
+                                    </PstlAdr>
+                                </Pty>
+                            </Dbtr>
+
+                            <DbtrAcct>
+                                <Id>
+                                    <IBAN>US12345678901234567890</IBAN>
+                                </Id>
+                            </DbtrAcct>
+
+                            <Cdtr>
+                                <Pty>
+                                    <Nm>Global Suppliers Ltd</Nm>
+                                    <PstlAdr>
+                                        <Ctry>GB</Ctry>
+                                    </PstlAdr>
+                                </Pty>
+                            </Cdtr>
+
+                            <CdtrAcct>
+                                <Id>
+                                    <IBAN>GB29NWBK60161331926819</IBAN>
+                                </Id>
+                            </CdtrAcct>
+
+                        </RltdPties>
+
+                        <RltdAgts>
+
+                            <DbtrAgt>
+                                <FinInstnId>
+                                    <BICFI>CHASUS33XXX</BICFI>
+                                </FinInstnId>
+                            </DbtrAgt>
+
+                            <CdtrAgt>
+                                <FinInstnId>
+                                    <BICFI>BARCGB22XXX</BICFI>
+                                </FinInstnId>
+                            </CdtrAgt>
+
+                        </RltdAgts>
+
+                        <RmtInf>
+                            <Ustrd>Invoice INV-2024-001 payment</Ustrd>
+                        </RmtInf>
+
+                    </TxDtls>
+
+                </NtryDtls>
+
+            </Ntry>
+
+        </Ntfctn>
+
+    </BkToCstmrDbtCdtNtfctn>
+</Document>
