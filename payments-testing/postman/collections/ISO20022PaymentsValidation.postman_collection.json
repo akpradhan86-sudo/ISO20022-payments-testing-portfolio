@@ -1,0 +1,743 @@
+{
+  "info": {
+    "_postman_id": "b208ce6a-8a36-4759-885f-ccb37da75123",
+    "name": "ISO 20022 Payments Validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53429967",
+    "_collection_link": "https://go.postman.co/collection/53429967-b208ce6a-8a36-4759-885f-ccb37da75123?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Positive Scenarios",
+      "item": [
+        {
+          "name": "Validate Valid pacs.008 Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Response contains XML payload\", function () {\r",
+                  "    pm.expect(xmlString).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"MsgId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<MsgId>\");\r",
+                  "    pm.expect(xmlString).to.include(\"</MsgId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"EndToEndId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<EndToEndId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"UETR is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<UETR>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Interbank settlement amount is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<IntrBkSttlmAmt\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Payment currency is USD\", function () {\r",
+                  "    pm.expect(xmlString).to.include('Ccy=\"USD\"');\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Debtor name is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Dbtr>\");\r",
+                  "    pm.expect(xmlString).to.include(\"<Nm>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Creditor is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Cdtr>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"BICFI is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<BICFI>\");\r",
+                  "});\r",
+                  "const msgIdMatch =\r",
+                  "    xmlString.match(/<MsgId>(.*?)<\\/MsgId>/);\r",
+                  "\r",
+                  "pm.test(\"MsgId value can be extracted\", function () {\r",
+                  "\r",
+                  "    pm.expect(msgIdMatch).to.not.be.null;\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "if (msgIdMatch) {\r",
+                  "\r",
+                  "    pm.collectionVariables.set(\r",
+                  "        \"lastMsgId\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "\r",
+                  "    console.log(\r",
+                  "        \"Captured MsgId:\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <CdtrAgt>\r\n        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>\r\n      </CdtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Negative Scenarios",
+      "item": [
+        {
+          "name": "Reject pacs.008 - Missing MsgId",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Response contains XML payload\", function () {\r",
+                  "    pm.expect(xmlString).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"MsgId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<MsgId>\");\r",
+                  "    pm.expect(xmlString).to.include(\"</MsgId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"EndToEndId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<EndToEndId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"UETR is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<UETR>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Interbank settlement amount is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<IntrBkSttlmAmt\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Payment currency is USD\", function () {\r",
+                  "    pm.expect(xmlString).to.include('Ccy=\"USD\"');\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Debtor name is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Dbtr>\");\r",
+                  "    pm.expect(xmlString).to.include(\"<Nm>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Creditor is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Cdtr>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"BICFI is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<BICFI>\");\r",
+                  "});\r",
+                  "const msgIdMatch =\r",
+                  "    xmlString.match(/<MsgId>(.*?)<\\/MsgId>/);\r",
+                  "\r",
+                  "pm.test(\"MsgId value can be extracted\", function () {\r",
+                  "\r",
+                  "    pm.expect(msgIdMatch).to.not.be.null;\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "if (msgIdMatch) {\r",
+                  "\r",
+                  "    pm.collectionVariables.set(\r",
+                  "        \"lastMsgId\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "\r",
+                  "    console.log(\r",
+                  "        \"Captured MsgId:\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <CdtrAgt>\r\n        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>\r\n      </CdtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject pacs.008 - Missing UETR",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Response contains XML payload\", function () {\r",
+                  "    pm.expect(xmlString).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"MsgId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<MsgId>\");\r",
+                  "    pm.expect(xmlString).to.include(\"</MsgId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"EndToEndId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<EndToEndId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"UETR is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<UETR>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Interbank settlement amount is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<IntrBkSttlmAmt\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Payment currency is USD\", function () {\r",
+                  "    pm.expect(xmlString).to.include('Ccy=\"USD\"');\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Debtor name is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Dbtr>\");\r",
+                  "    pm.expect(xmlString).to.include(\"<Nm>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Creditor is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Cdtr>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"BICFI is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<BICFI>\");\r",
+                  "});\r",
+                  "const msgIdMatch =\r",
+                  "    xmlString.match(/<MsgId>(.*?)<\\/MsgId>/);\r",
+                  "\r",
+                  "pm.test(\"MsgId value can be extracted\", function () {\r",
+                  "\r",
+                  "    pm.expect(msgIdMatch).to.not.be.null;\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "if (msgIdMatch) {\r",
+                  "\r",
+                  "    pm.collectionVariables.set(\r",
+                  "        \"lastMsgId\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "\r",
+                  "    console.log(\r",
+                  "        \"Captured MsgId:\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <CdtrAgt>\r\n        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>\r\n      </CdtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject pacs.008 - Zero Settlement Amount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Response contains XML payload\", function () {\r",
+                  "    pm.expect(xmlString).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"MsgId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<MsgId>\");\r",
+                  "    pm.expect(xmlString).to.include(\"</MsgId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"EndToEndId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<EndToEndId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"UETR is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<UETR>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Interbank settlement amount is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<IntrBkSttlmAmt\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Payment currency is USD\", function () {\r",
+                  "    pm.expect(xmlString).to.include('Ccy=\"USD\"');\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Debtor name is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Dbtr>\");\r",
+                  "    pm.expect(xmlString).to.include(\"<Nm>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Creditor is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Cdtr>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"BICFI is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<BICFI>\");\r",
+                  "});\r",
+                  "const msgIdMatch =\r",
+                  "    xmlString.match(/<MsgId>(.*?)<\\/MsgId>/);\r",
+                  "\r",
+                  "pm.test(\"MsgId value can be extracted\", function () {\r",
+                  "\r",
+                  "    pm.expect(msgIdMatch).to.not.be.null;\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "if (msgIdMatch) {\r",
+                  "\r",
+                  "    pm.collectionVariables.set(\r",
+                  "        \"lastMsgId\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "\r",
+                  "    console.log(\r",
+                  "        \"Captured MsgId:\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <CdtrAgt>\r\n        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>\r\n      </CdtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject pacs.008 - Invalid Currency",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Response contains XML payload\", function () {\r",
+                  "    pm.expect(xmlString).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"MsgId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<MsgId>\");\r",
+                  "    pm.expect(xmlString).to.include(\"</MsgId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"EndToEndId is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<EndToEndId>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"UETR is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<UETR>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Interbank settlement amount is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<IntrBkSttlmAmt\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Payment currency is USD\", function () {\r",
+                  "    pm.expect(xmlString).to.include('Ccy=\"USD\"');\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Debtor name is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Dbtr>\");\r",
+                  "    pm.expect(xmlString).to.include(\"<Nm>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Creditor is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<Cdtr>\");\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"BICFI is present\", function () {\r",
+                  "    pm.expect(xmlString).to.include(\"<BICFI>\");\r",
+                  "});\r",
+                  "const msgIdMatch =\r",
+                  "    xmlString.match(/<MsgId>(.*?)<\\/MsgId>/);\r",
+                  "\r",
+                  "pm.test(\"MsgId value can be extracted\", function () {\r",
+                  "\r",
+                  "    pm.expect(msgIdMatch).to.not.be.null;\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "if (msgIdMatch) {\r",
+                  "\r",
+                  "    pm.collectionVariables.set(\r",
+                  "        \"lastMsgId\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "\r",
+                  "    console.log(\r",
+                  "        \"Captured MsgId:\",\r",
+                  "        msgIdMatch[1]\r",
+                  "    );\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <CdtrAgt>\r\n        <FinInstnId><BICFI>BARCGB22XXX</BICFI></FinInstnId>\r\n      </CdtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject pacs.008 - Missing Creditor BIC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();\r",
+                  "\r",
+                  "const xmlString = responseJson.data;\r",
+                  "\r",
+                  "pm.test(\"Validation detects missing creditor agent\", function () {\r",
+                  "\r",
+                  "    pm.expect(xmlString).to.not.include(\"<CdtrAgt>\");\r",
+                  "\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/xml",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pacs.008.001.08\">\r\n  <FIToFICstmrCdtTrf>\r\n    <GrpHdr>\r\n      <MsgId>MSG-20240101-001</MsgId>\r\n      <CreDtTm>2024-01-15T10:30:00</CreDtTm>\r\n      <NbOfTxs>1</NbOfTxs>\r\n      <TtlIntrBkSttlmAmt Ccy=\"USD\">1000.00</TtlIntrBkSttlmAmt>\r\n      <SttlmInf>\r\n        <SttlmMtd>CLRG</SttlmMtd>\r\n      </SttlmInf>\r\n    </GrpHdr>\r\n    <CdtTrfTxInf>\r\n      <PmtId>\r\n        <EndToEndId>E2E-REF-001</EndToEndId>\r\n        <TxId>TXN-20240115-001</TxId>\r\n        <UETR>f47ac10b-58cc-4372-a567-0e02b2c3d479</UETR>\r\n      </PmtId>\r\n      <IntrBkSttlmAmt Ccy=\"USD\">1000.00</IntrBkSttlmAmt>\r\n      <IntrBkSttlmDt>2024-01-15</IntrBkSttlmDt>\r\n      <Dbtr>\r\n        <Nm>ACME Corporation</Nm>\r\n        <PstlAdr>\r\n          <Ctry>US</Ctry>\r\n        </PstlAdr>\r\n      </Dbtr>\r\n      <DbtrAcct>\r\n        <Id><IBAN>US12345678901234567890</IBAN></Id>\r\n      </DbtrAcct>\r\n      <DbtrAgt>\r\n        <FinInstnId><BICFI>CHASUS33XXX</BICFI></FinInstnId>\r\n      </DbtrAgt>\r\n      <Cdtr>\r\n        <Nm>Global Suppliers Ltd</Nm>\r\n        <PstlAdr>\r\n          <Ctry>GB</Ctry>\r\n        </PstlAdr>\r\n      </Cdtr>\r\n      <CdtrAcct>\r\n        <Id><IBAN>GB29NWBK60161331926819</IBAN></Id>\r\n      </CdtrAcct>\r\n      <RmtInf>\r\n        <Ustrd>Invoice INV-2024-001 payment</Ustrd>\r\n      </RmtInf>\r\n    </CdtTrfTxInf>\r\n  </FIToFICstmrCdtTrf>\r\n</Document>",
+              "options": {
+                "raw": {
+                  "language": "xml"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://httpbin.org/post",
+              "protocol": "https",
+              "host": [
+                "httpbin",
+                "org"
+              ],
+              "path": [
+                "post"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment Lifecycle",
+      "item": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "const timestamp = new Date()\r",
+          "    .toISOString()\r",
+          "    .replace(/[-:T.Z]/g, '')\r",
+          "    .substring(0, 14);\r",
+          "\r",
+          "const dynamicMsgId = \"MSG-\" + timestamp;\r",
+          "\r",
+          "pm.collectionVariables.set(\r",
+          "    \"dynamicMsgId\",\r",
+          "    dynamicMsgId\r",
+          ");\r",
+          "\r",
+          "pm.collectionVariables.set(\r",
+          "    \"testRunTime\",\r",
+          "    new Date().toISOString()\r",
+          ");\r",
+          "\r",
+          "console.log(\r",
+          "    \"Generated MsgId:\",\r",
+          "    dynamicMsgId\r",
+          ");"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "dynamicMsgId",
+      "value": ""
+    },
+    {
+      "key": "testRunTime",
+      "value": ""
+    },
+    {
+      "key": "lastMsgId",
+      "value": ""
+    }
+  ]
+}
